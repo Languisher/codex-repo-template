@@ -21,3 +21,10 @@ validation path are obvious.
 
 Plans describe intent; host tests, checks, or manual verification validate
 behavior.
+
+## Optional Project-Type Skills
+
+Project-type skill templates can live under `.agents/skill-templates/`. They
+are not active by default. Copy a template into a host project's
+`.agents/skills/` directory only when the host project intentionally adopts its
+conventions.

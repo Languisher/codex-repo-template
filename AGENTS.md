@@ -17,6 +17,8 @@ and service configuration.
   project is trusted.
 - `.agents/skills/codex-overlay-maintenance/SKILL.md`: maintenance workflow for
   this overlay.
+- `.agents/skill-templates/`: optional project-type skill templates that can be
+  copied into a host project's `.agents/skills/` directory.
 - `docs/exec-plans/`: execution-plan conventions and reusable templates.
 - `docs/references/`: stable references for Codex workflows and sources.
 - `scripts/preflight.example.py`: optional starting point for host-owned
@@ -25,6 +27,11 @@ and service configuration.
 Do not add overlay-owned `pyproject.toml`, `uv.lock`, `.python-version`,
 virtual environments, application source code, tests, app configs, model
 configs, or host CI files.
+
+Project-type templates under `.agents/skill-templates/` are opt-in examples.
+They may describe concrete conventions such as a package manager, logging
+library, or config format, but those conventions apply only after a host project
+copies and enables the template as its own skill.
 
 If `docs/exec-plans/active/` contains task files, inspect them before
 continuing partially completed work.

@@ -23,8 +23,18 @@ CI.
 - Project-scoped Codex defaults live in `.codex/config.toml`.
 - Reusable overlay maintenance guidance lives in
   `.agents/skills/codex-overlay-maintenance/SKILL.md`.
+- Optional project-type skill templates live in `.agents/skill-templates/` and
+  become active only after a host project copies them into `.agents/skills/`.
 - Larger tasks can use `docs/exec-plans/templates/overlay-plan.md`.
 - Optional preflight examples live in `scripts/preflight.example.py`.
+
+## Optional Templates
+
+- Python projects that intentionally standardize on `uv`, `stdlogkit`, and TOML
+  configuration can copy
+  `.agents/skill-templates/python-uv-project/SKILL.md` into their own
+  `.agents/skills/` directory and use
+  `docs/references/python-uv-project.md` as supporting guidance.
 
 ## Prompt Shape
 

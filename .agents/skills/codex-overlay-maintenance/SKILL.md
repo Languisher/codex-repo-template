@@ -17,6 +17,7 @@ The overlay owns only these paths:
 - `AGENTS.md`
 - `.codex/config.toml`
 - `.agents/skills/codex-overlay-maintenance/SKILL.md`
+- `.agents/skill-templates/`
 - `docs/exec-plans/`
 - `docs/references/`
 - `scripts/preflight.example.py`
@@ -34,9 +35,12 @@ configs, or generated environments.
    it is clearly presented as an example.
 3. Preserve the distinction between reusable Codex operating rules and
    project-specific facts that must be filled in after the overlay is embedded.
-4. Update execution-plan templates when workflow expectations change.
-5. Update references when public-source assumptions or links change.
-6. Validate with structural checks that do not require a host project.
+4. Keep `.agents/skill-templates/` opt-in. A project-type template may name
+   concrete tools, libraries, or config formats only within that template and
+   its supporting references.
+5. Update execution-plan templates when workflow expectations change.
+6. Update references when public-source assumptions or links change.
+7. Validate with structural checks that do not require a host project.
 
 ## Preflight Guidance
 
@@ -57,6 +61,8 @@ For vLLM-style projects, useful host-specific checks usually include:
 
 - Overlay structure change: verify only allowed overlay paths are present.
 - `AGENTS.md` change: check that host-neutral language is preserved.
+- Skill-template change: check that concrete tool rules are scoped to an opt-in
+  template and do not become global overlay requirements.
 - Execution-plan change: check that goal, context, constraints, preflight,
   steps, validation, risks, and done condition are present.
 - Preflight example change: run a syntax check with the host's available Python
