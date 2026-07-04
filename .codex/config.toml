@@ -1,0 +1,10 @@
+# Project-scoped Codex defaults. Codex loads this file only after the project is
+# trusted by the user.
+
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+model_reasoning_effort = "medium"
+model_verbosity = "low"
+
+# Keep repository guidance available if this template grows.
+project_doc_max_bytes = 65536
