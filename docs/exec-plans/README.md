@@ -1,7 +1,8 @@
 # Execution Plans
 
-Use execution plans for broad, risky, or multi-step Codex tasks. Small edits do
-not need a plan if the goal, files, and validation path are obvious.
+Use execution plans for broad, risky, or multi-step Codex tasks in the host
+project. Small edits do not need a plan if the goal, files, preflight, and
+validation path are obvious.
 
 ## Folders
 
@@ -11,11 +12,12 @@ not need a plan if the goal, files, and validation path are obvious.
 
 ## Workflow
 
-1. Copy `templates/hello-world-plan.md` into `active/`.
-2. Fill in the goal, context, constraints, and validation commands.
+1. Copy `templates/overlay-plan.md` into `active/`.
+2. Fill in host-specific goal, context, constraints, preflight, validation,
+   risks, and done condition.
 3. Keep the checklist current while work proceeds.
 4. Move the plan to `completed/` when the work is done and the summary is still
    useful.
 
-Do not use execution plans as a substitute for tests. Plans describe intent;
-tests verify behavior.
+Plans describe intent; host tests, checks, or manual verification validate
+behavior.

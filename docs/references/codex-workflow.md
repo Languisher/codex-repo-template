@@ -1,8 +1,8 @@
-# Codex Workflow Reference
+# Codex Overlay Reference
 
-This template was built from current public Codex guidance and keeps the
-practical parts in the repository so future Codex sessions do not need to
-rediscover them.
+This overlay keeps reusable Codex workflow guidance in files that can be copied
+into an existing project without imposing runtime code, dependencies, tests, or
+CI.
 
 ## Source Links
 
@@ -16,32 +16,30 @@ rediscover them.
   https://developers.openai.com/codex/skills
 - Codex non-interactive mode:
   https://developers.openai.com/codex/noninteractive
-- uv in GitHub Actions:
-  https://docs.astral.sh/uv/guides/integration/github/
 
 ## Local Mapping
 
 - Durable repository guidance lives in `AGENTS.md`.
 - Project-scoped Codex defaults live in `.codex/config.toml`.
-- Reusable repo workflow guidance lives in
-  `.agents/skills/hello-world-maintenance/SKILL.md`.
-- Larger tasks can use `docs/exec-plans/templates/hello-world-plan.md`.
-- Standard validation is `uv sync --locked`, `uv run pytest`,
-  `uv run ruff check .`, and `uv run ruff format --check .`.
-- GitHub Actions runs the standard validation in `.github/workflows/ci.yml`.
+- Reusable overlay maintenance guidance lives in
+  `.agents/skills/codex-overlay-maintenance/SKILL.md`.
+- Larger tasks can use `docs/exec-plans/templates/overlay-plan.md`.
+- Optional preflight examples live in `scripts/preflight.example.py`.
 
 ## Prompt Shape
 
-Good Codex prompts for this repository include:
+Good Codex prompts for a host project include:
 
-- Goal: the behavior or documentation outcome.
-- Context: relevant files, errors, or previous attempts.
-- Constraints: TOML-only config, `uv`, no unnecessary dependencies, and small
-  changes.
+- Goal: the behavior, bug fix, investigation, or documentation outcome.
+- Context: relevant files, errors, model paths, service names, logs, or previous
+  attempts.
+- Constraints: host package manager, lockfile, test commands, deployment rules,
+  performance boundaries, security requirements, and resource limits.
+- Preflight: resources that must exist before running commands.
 - Done when: exact validation commands and expected output.
 
 ## Automation Notes
 
 Use `codex exec` for scripted Codex runs only when the prompt, sandbox, and
-approval behavior are explicit. Do not expose API keys to repository-controlled
-commands in the same job.
+approval behavior are explicit. Do not expose API keys or private model access
+credentials to repository-controlled commands in the same job.

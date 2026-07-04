@@ -6,5 +6,5 @@ approval_policy = "on-request"
 model_reasoning_effort = "medium"
 model_verbosity = "low"
 
-# Keep repository guidance available if this template grows.
+# Keep overlay guidance available after embedding into a larger host project.
 project_doc_max_bytes = 65536

@@ -1,155 +1,97 @@
 # AGENTS.md
 
-## Project Overview
+## Overlay Purpose
 
-This is a Codex-ready Python template. Its only runtime goal is to print
-`hello world`, but the repository is structured so Codex can safely inspect,
-change, validate, and report on the project.
+This repository is a Codex Overlay Template for embedding Codex operating
+guidance into an existing host project.
 
-The project uses:
+It is not a Python package, application scaffold, dependency template, test
+suite, or CI template. The host project owns its runtime code, package manager,
+lockfiles, virtual environments, tests, CI, deployment, model files, datasets,
+and service configuration.
 
-- `uv` for Python environment and dependency management.
-- TOML for application and Codex configuration.
+## Overlay Map
 
-Do not introduce alternative environment managers, logging frameworks, or
-configuration formats unless explicitly requested.
-
-## Repository Map
-
-- `README.md`: user-facing setup, usage, and Codex workflow.
-- `ARCHITECTURE.md`: design boundaries for the hello-world CLI.
-- `pyproject.toml`: package metadata, scripts, dependencies, and tool config.
-- `src/codex_repo_template/`: application code.
-- `configs/default.toml`: editable TOML configuration example.
-- `tests/`: behavioral and template contract tests.
-- `.codex/config.toml`: project-scoped Codex defaults.
-- `.agents/skills/`: repo-local Codex skills.
-- `docs/design-docs/`: design notes and recurring project beliefs.
-- `docs/exec-plans/`: plan templates and active/completed plan folders.
+- `AGENTS.md`: durable Codex guidance for the host project.
+- `.codex/config.toml`: project-scoped Codex defaults, active after the host
+  project is trusted.
+- `.agents/skills/codex-overlay-maintenance/SKILL.md`: maintenance workflow for
+  this overlay.
+- `docs/exec-plans/`: execution-plan conventions and reusable templates.
 - `docs/references/`: stable references for Codex workflows and sources.
+- `scripts/preflight.example.py`: optional starting point for host-owned
+  preflight checks.
+
+Do not add overlay-owned `pyproject.toml`, `uv.lock`, `.python-version`,
+virtual environments, application source code, tests, app configs, model
+configs, or host CI files.
 
 If `docs/exec-plans/active/` contains task files, inspect them before
 continuing partially completed work.
 
-## Environment
+## Host Project First
 
-Use `uv` for Python commands.
+Before changing a host project, discover and follow its existing conventions:
 
-Preferred commands:
+1. inspect its repository guidance files, docs, package metadata, lockfiles,
+   scripts, CI, and test configuration;
+2. identify the package manager, environment setup command, test runner,
+   formatter, linter, and build system from host files;
+3. inspect the relevant source definitions, schemas, parsers, and existing
+   usage before changing interfaces;
+4. use host commands exactly as documented instead of substituting overlay
+   preferences.
 
-- `uv sync`
-- `uv run codex-hello`
-- `uv run python -m codex_repo_template`
-- `uv run pytest`
-- `uv run ruff check .`
-- `uv run ruff format .`
+If the host project provides more specific instructions in a nested
+`AGENTS.md`, follow the more specific instructions for files under that scope.
 
-Do not use bare `python`, `pip`, `pytest`, or `ruff` unless explicitly
-requested.
+## Preflight
 
-If dependencies are missing, update `pyproject.toml` first, then run
-`uv sync`.
+Before running application, training, inference, service, migration, or other
+expensive commands, perform a command-specific preflight check:
 
-Before running application code, perform a quick preflight check that matches
-the command being run:
-
-1. confirm required tools such as `uv` are available;
-2. confirm dependencies are synced when the command needs them;
-3. confirm required config files such as `configs/default.toml` exist;
-4. confirm required external resources exist before using them;
-5. stop and report missing prerequisites before running expensive, stateful, or
+1. confirm required host tools and dependencies are available;
+2. confirm required config files and local paths exist;
+3. confirm required external resources are available before use;
+4. confirm secrets or credentials are present without printing their values;
+5. confirm ports, GPUs, databases, caches, queues, or services needed by the
+   command are ready;
+6. stop and report missing prerequisites before running expensive, stateful, or
    destructive commands.
 
-For this template, the preflight is intentionally small. For larger projects,
-extend it to cover project-specific resources such as model paths, datasets,
-service credentials, ports, GPUs, databases, or local caches.
+For model-serving or vLLM-style projects, preflight should usually check model
+paths, tokenizer/config/weight files, GPU/CUDA visibility, dataset paths, cache
+directories, service ports, and host dependency state.
 
-## Codex Operating Rules
-
-These rules are reusable across projects based on this template:
-
-- inspect relevant files before editing;
-- confirm interfaces before using or changing them;
-- make the smallest change that satisfies the request;
-- update tests and docs when behavior, commands, configuration, or public APIs
-  change;
-- run the narrowest useful validation first;
-- report changed files, validation, and remaining risks.
-
-## Project-Specific Boundaries
-
-These constraints are specific to this hello-world template:
-
-- runtime behavior stays focused on printing the configured hello-world message;
-- CLI argument parsing belongs in `src/codex_repo_template/cli.py`;
-- TOML parsing and validation belong in `src/codex_repo_template/config.py`;
-- the package entry point belongs in `src/codex_repo_template/__main__.py`;
-- user-editable config examples belong in `configs/`;
-- do not add services, background jobs, databases, network calls, or model
-  dependencies unless explicitly requested.
-
-## Logging
-
-This template has no production logs because the application only emits
-intentional CLI output.
-
-When production logging is added:
-
-1. add and document the `stdlogkit` dependency;
-2. inspect existing usage or official project references before calling its API;
-3. never replace it with `logging`, `structlog`, `loguru`, or another framework
-   without explicit approval.
-
-Do not use `print()` for production logging. `print()` is acceptable for
-intentional CLI output, temporary local debugging, and tests that verify stdout
-behavior.
-
-Logs must contain enough context to debug failures, but must not expose
-secrets, tokens, credentials, or private data.
-
-## Configuration
-
-Use TOML for configuration.
-
-Do not introduce YAML, JSON, `.env`, or Python config files unless explicitly
-requested. Codex-specific files that have fixed upstream formats, such as
-`AGENTS.md` and skill `SKILL.md` files, are allowed.
-
-Before adding a new config key:
-
-1. inspect `configs/default.toml`;
-2. inspect `src/codex_repo_template/config.py`;
-3. reuse an existing key if appropriate;
-4. update config examples, validation logic, tests, and docs together.
-
-Do not invent config keys without checking how configuration is parsed.
+Use `scripts/preflight.example.py` only as a starting point. The host project
+should copy, adapt, or replace it with checks that match its own runtime.
 
 ## Codex Workflow
 
 For each non-trivial task:
 
-1. read the relevant files before editing;
-2. perform a preflight check before running application code;
+1. read the relevant host-project files before editing;
+2. perform the preflight checks needed before running host commands;
 3. restate the goal, constraints, and done condition when the task is broad;
 4. make the smallest change that satisfies the request;
-5. update tests or docs when behavior, commands, configuration, or public APIs
-   change;
-6. run the narrowest useful validation first;
+5. update host tests or docs when behavior, commands, configuration, or public
+   APIs change;
+6. run the narrowest useful host validation first;
 7. summarize changed files, validation, and remaining risks.
 
-Use `docs/exec-plans/templates/hello-world-plan.md` for larger tasks that need
-an explicit plan.
+Use `docs/exec-plans/templates/overlay-plan.md` for broad, risky, or multi-step
+tasks that need an explicit plan.
 
 ## No Guessing Policy
 
 Do not guess interfaces.
 
 Before using or modifying a function, class, CLI flag, config key, module path,
-or external library API:
+schema, model artifact, service endpoint, or external library API:
 
-1. search for existing usage in the repository;
-2. inspect the definition, parser, or schema;
-3. inspect relevant docs under `docs/` or `docs/references/`;
+1. search for existing usage in the host repository;
+2. inspect the definition, parser, schema, or configuration;
+3. inspect relevant host docs or references;
 4. only then make the change.
 
 If the interface cannot be confirmed, report the uncertainty instead of
@@ -159,28 +101,25 @@ inventing behavior.
 
 Prefer small, focused changes.
 
-Reuse existing interfaces before creating new ones.
+Reuse existing host interfaces before creating new ones.
 
-Preserve existing architecture boundaries listed under Project-Specific
-Boundaries.
-
-Avoid broad rewrites unless explicitly requested.
+Preserve host architecture boundaries. If the boundaries are unclear, inspect
+docs and existing module organization before editing. Do not invent new layers,
+services, dependency managers, configuration formats, or CI workflows unless the
+user explicitly asks for them.
 
 When fixing a bug, first identify the failing path or broken invariant, then
 make the smallest change that addresses it.
 
-When changing behavior, update or add tests.
+When changing behavior, update or add host-project tests when practical.
 
-## Testing and Validation
+## Validation
 
-After code changes, run the narrowest relevant validation first.
+Use the host project's validation commands. Do not assume a specific language,
+package manager, test runner, linter, formatter, or CI provider.
 
-Common commands:
-
-- `uv run pytest`
-- `uv run pytest tests/<specific_test_file>.py`
-- `uv run ruff check .`
-- `uv run ruff format --check .`
+Run the narrowest relevant validation first, then broader host validation when
+practical.
 
 Do not claim validation was performed unless the command was actually run.
 
@@ -191,16 +130,17 @@ and next minimal fix.
 
 Do not add dependencies casually.
 
-Before adding a dependency, check whether the standard library or an existing
-dependency is sufficient.
+Before adding a dependency, check whether the host standard library, existing
+dependencies, or existing project utilities are sufficient.
 
-If a dependency is necessary, explain why it is needed and whether it is
-runtime, development, or optional.
+If a dependency is necessary, explain why it is needed, whether it is runtime,
+development, optional, model-serving, or infrastructure-only, and update the
+host dependency files and docs together.
 
 ## Documentation
 
-Update documentation when behavior, commands, configuration, or public APIs
-change.
+Update host documentation when behavior, commands, configuration, deployment,
+model resources, or public APIs change.
 
 Documentation should be concise and operational.
 
@@ -209,20 +149,22 @@ maintenance.
 
 ## Security and Privacy
 
-Never commit secrets, tokens, passwords, private keys, or machine-specific
-credentials.
+Never commit secrets, tokens, passwords, private keys, private model access
+URLs, machine-specific credentials, or sensitive local paths.
 
 Do not log secrets or full private payloads.
 
-Redact sensitive environment variables, URLs, and credentials in logs and
-reports.
+Redact sensitive environment variables, URLs, credentials, prompts, datasets,
+and model outputs in logs and reports.
 
 ## Completion Criteria
 
 A task is complete only when:
 
-1. relevant files were inspected;
-2. the change is minimal and consistent with existing architecture;
-3. appropriate validation was run, or the reason for not running it is stated;
-4. the final response summarizes what changed, which files were touched, what
-   validation was run, and any remaining risks.
+1. relevant host files were inspected;
+2. the change is minimal and consistent with host architecture;
+3. required preflight checks were run or skipped with a stated reason;
+4. appropriate host validation was run, or the reason for not running it is
+   stated;
+5. the final response summarizes what changed, which files were touched, what
+   validation ran, and any remaining risks.
