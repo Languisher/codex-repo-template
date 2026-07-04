@@ -21,3 +21,13 @@ executable verification.
 
 The template is intentionally language-neutral. Add package manager, runtime,
 test runner, and CI details only after the host project chooses them.
+
+## Included Variants
+
+- `templates/python-uv-agents/AGENTS.md`: Python project instructions that
+  require `uv` for environment management and `stdlogkit` for production
+  logging.
+- `.agents/skill-templates/python-uv-project/SKILL.md`: matching Codex skill
+  template for Python implementation work.
+- `docs/references/python-uv-project.md`: supporting reference with suggested
+  script bodies and project conventions.
