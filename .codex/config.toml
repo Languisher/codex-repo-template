@@ -6,5 +6,5 @@ approval_policy = "on-request"
 model_reasoning_effort = "medium"
 model_verbosity = "low"
 
-# Keep overlay guidance available after embedding into a larger host project.
+# Keep repository guidance available in larger projects.
 project_doc_max_bytes = 65536

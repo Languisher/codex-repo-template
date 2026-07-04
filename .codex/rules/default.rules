@@ -1,0 +1,5 @@
+# Optional command-safety notes for this project.
+#
+# Fill this file with project-specific restrictions if your Codex environment
+# supports rules. Keep destructive commands, production credentials, external
+# service mutations, and expensive jobs behind explicit user approval.

@@ -1,177 +1,118 @@
 # AGENTS.md
 
-## Overlay Purpose
+## Project Purpose
 
-This repository is a Codex Overlay Template for embedding Codex operating
-guidance into an existing host project.
+This repository is a Codex-ready project template. It organizes project context
+into three layers:
 
-It is not a Python package, application scaffold, dependency template, test
-suite, or CI template. The host project owns its runtime code, package manager,
-lockfiles, virtual environments, tests, CI, deployment, model files, datasets,
-and service configuration.
+1. durable instructions in `AGENTS.md`;
+2. task-specific workflows in `.agents/skills/`;
+3. executable feedback in `scripts/`, `tests/`, and optional `evals/`.
 
-## Overlay Map
+After copying this template into a real project, replace placeholders with the
+project's actual runtime, commands, architecture, and completion criteria.
 
-- `AGENTS.md`: durable Codex guidance for the host project.
-- `.codex/config.toml`: project-scoped Codex defaults, active after the host
-  project is trusted.
-- `.agents/skills/codex-overlay-maintenance/SKILL.md`: maintenance workflow for
-  this overlay.
-- `.agents/skill-templates/`: optional project-type skill templates that can be
-  copied into a host project's `.agents/skills/` directory.
-- `docs/exec-plans/`: execution-plan conventions and reusable templates.
-- `docs/references/`: stable references for Codex workflows and sources.
-- `scripts/preflight.example.py`: optional starting point for host-owned
-  preflight checks.
+## Repository Map
 
-Do not add overlay-owned `pyproject.toml`, `uv.lock`, `.python-version`,
-virtual environments, application source code, tests, app configs, model
-configs, or host CI files.
+- `AGENTS.md`: repository-level Codex instructions that should always apply.
+- `.codex/config.toml`: project-scoped Codex defaults, loaded after trust.
+- `.codex/hooks.json`: optional lifecycle hook placeholders.
+- `.codex/rules/default.rules`: optional command-safety notes.
+- `.agents/skills/`: reusable Codex workflows for recurring tasks.
+- `docs/architecture.md`: system boundaries and module ownership.
+- `docs/development.md`: setup, run, and local development notes.
+- `docs/testing.md`: test strategy, naming, fixtures, and verification rules.
+- `docs/code_review.md`: code-review criteria and release-risk checks.
+- `docs/decisions/`: architecture decision records.
+- `docs/workflows/`: longer workflow references.
+- `scripts/`: canonical project commands used by Codex and humans.
+- `tests/`: project tests, once the host project adds implementation code.
+- `evals/`: optional behavioral evaluations for complex product or model work.
 
-Project-type templates under `.agents/skill-templates/` are opt-in examples.
-They may describe concrete conventions such as a package manager, logging
-library, or config format, but those conventions apply only after a host project
-copies and enables the template as its own skill.
+## Non-Negotiable Rules
 
-If `docs/exec-plans/active/` contains task files, inspect them before
-continuing partially completed work.
+- Do not commit secrets, tokens, passwords, credentials, private keys, private
+  model URLs, or generated local environment files.
+- Do not introduce new production dependencies without explicit approval.
+- Do not change public APIs, database schemas, wire formats, migrations, auth,
+  authorization, billing, or irreversible data behavior unless the task
+  explicitly asks for it.
+- Prefer modifying existing modules over creating parallel implementations.
+- Preserve backward compatibility unless the task includes a migration plan.
+- Use structured parsers and project-native APIs instead of fragile string
+  manipulation where practical.
 
-## Host Project First
+## Standard Commands
 
-Before changing a host project, discover and follow its existing conventions:
+Fill these scripts with the real project commands before relying on them:
 
-1. inspect its repository guidance files, docs, package metadata, lockfiles,
-   scripts, CI, and test configuration;
-2. identify the package manager, environment setup command, test runner,
-   formatter, linter, and build system from host files;
-3. inspect the relevant source definitions, schemas, parsers, and existing
-   usage before changing interfaces;
-4. use host commands exactly as documented instead of substituting overlay
-   preferences.
+- Setup: `./scripts/bootstrap.sh`
+- Run app: `./scripts/dev.sh`
+- Lint: `./scripts/lint.sh`
+- Type check: `./scripts/typecheck.sh`
+- Test: `./scripts/test.sh`
+- Affected tests: `./scripts/test_affected.sh`
+- Final verification: `./scripts/verify.sh`
 
-If the host project provides more specific instructions in a nested
-`AGENTS.md`, follow the more specific instructions for files under that scope.
+`./scripts/verify.sh` is the canonical done check. It should run the same
+quality gates a pull request must pass.
 
-## Preflight
+## Architecture Rules
 
-Before running application, training, inference, service, migration, or other
-expensive commands, perform a command-specific preflight check:
+- Read `docs/architecture.md` before changing module boundaries.
+- Keep domain logic, I/O adapters, API/UI layers, and shared utilities in their
+  documented locations once the host project defines them.
+- Do not create new architectural layers, service boundaries, dependency
+  managers, configuration systems, or CI workflows unless requested.
+- Shared utilities should have at least two real call sites before extraction,
+  unless the existing project convention says otherwise.
+- When an interface is unclear, inspect definitions, schemas, parsers, and
+  existing usage before editing.
 
-1. confirm required host tools and dependencies are available;
-2. confirm required config files and local paths exist;
-3. confirm required external resources are available before use;
-4. confirm secrets or credentials are present without printing their values;
-5. confirm ports, GPUs, databases, caches, queues, or services needed by the
-   command are ready;
-6. stop and report missing prerequisites before running expensive, stateful, or
-   destructive commands.
+## Testing Rules
 
-For model-serving or vLLM-style projects, preflight should usually check model
-paths, tokenizer/config/weight files, GPU/CUDA visibility, dataset paths, cache
-directories, service ports, and host dependency state.
+- Any behavior change must include or update tests when practical.
+- Bug fixes should include a regression test that fails before the fix.
+- Prefer narrow affected tests while iterating.
+- Run `./scripts/verify.sh` before declaring completion, unless the user
+  explicitly asks not to or the project has not configured verification yet.
+- If validation cannot run, report the exact command skipped and why.
 
-Use `scripts/preflight.example.py` only as a starting point. The host project
-should copy, adapt, or replace it with checks that match its own runtime.
+## Codex Skill Routing
 
-## Codex Workflow
+Use these repository skills when the task matches:
 
-For each non-trivial task:
+- `$repo-plan`: before multi-file, ambiguous, risky, or architecture-sensitive
+  work.
+- `$repo-feature`: when adding or changing product behavior.
+- `$repo-debug`: when reproducing and fixing a bug, failing test, runtime
+  error, or CI failure.
+- `$repo-review`: when reviewing a diff, PR, branch, or uncommitted changes.
+- `$repo-release`: when preparing release notes, changelog entries, or version
+  bumps.
 
-1. read the relevant host-project files before editing;
-2. perform the preflight checks needed before running host commands;
-3. restate the goal, constraints, and done condition when the task is broad;
-4. make the smallest change that satisfies the request;
-5. update host tests or docs when behavior, commands, configuration, or public
-   APIs change;
-6. run the narrowest useful host validation first;
-7. summarize changed files, validation, and remaining risks.
+At the start of a non-trivial task, identify whether a skill applies. If a
+skill applies, read and follow it before editing.
 
-Use `docs/exec-plans/templates/overlay-plan.md` for broad, risky, or multi-step
-tasks that need an explicit plan.
+## Work Process
 
-## No Guessing Policy
+For non-trivial changes:
 
-Do not guess interfaces.
+1. Restate the goal, constraints, and done condition.
+2. Inspect relevant files before editing.
+3. Make the smallest coherent change.
+4. Add or update tests and docs when behavior, commands, configuration, or
+   public APIs change.
+5. Run the narrowest useful validation first.
+6. Run `./scripts/verify.sh` before final response when configured.
+7. Review the diff for accidental API changes, dead code, and regressions.
 
-Before using or modifying a function, class, CLI flag, config key, module path,
-schema, model artifact, service endpoint, or external library API:
-
-1. search for existing usage in the host repository;
-2. inspect the definition, parser, schema, or configuration;
-3. inspect relevant host docs or references;
-4. only then make the change.
-
-If the interface cannot be confirmed, report the uncertainty instead of
-inventing behavior.
-
-## Coding Rules
-
-Prefer small, focused changes.
-
-Reuse existing host interfaces before creating new ones.
-
-Preserve host architecture boundaries. If the boundaries are unclear, inspect
-docs and existing module organization before editing. Do not invent new layers,
-services, dependency managers, configuration formats, or CI workflows unless the
-user explicitly asks for them.
-
-When fixing a bug, first identify the failing path or broken invariant, then
-make the smallest change that addresses it.
-
-When changing behavior, update or add host-project tests when practical.
-
-## Validation
-
-Use the host project's validation commands. Do not assume a specific language,
-package manager, test runner, linter, formatter, or CI provider.
-
-Run the narrowest relevant validation first, then broader host validation when
-practical.
-
-Do not claim validation was performed unless the command was actually run.
-
-If validation fails, report the exact command, failure summary, likely cause,
-and next minimal fix.
-
-## Dependencies
-
-Do not add dependencies casually.
-
-Before adding a dependency, check whether the host standard library, existing
-dependencies, or existing project utilities are sufficient.
-
-If a dependency is necessary, explain why it is needed, whether it is runtime,
-development, optional, model-serving, or infrastructure-only, and update the
-host dependency files and docs together.
-
-## Documentation
-
-Update host documentation when behavior, commands, configuration, deployment,
-model resources, or public APIs change.
-
-Documentation should be concise and operational.
-
-Avoid documenting unstable implementation details unless they are necessary for
-maintenance.
-
-## Security and Privacy
-
-Never commit secrets, tokens, passwords, private keys, private model access
-URLs, machine-specific credentials, or sensitive local paths.
-
-Do not log secrets or full private payloads.
-
-Redact sensitive environment variables, URLs, credentials, prompts, datasets,
-and model outputs in logs and reports.
-
-## Completion Criteria
+## Done Means
 
 A task is complete only when:
 
-1. relevant host files were inspected;
-2. the change is minimal and consistent with host architecture;
-3. required preflight checks were run or skipped with a stated reason;
-4. appropriate host validation was run, or the reason for not running it is
-   stated;
-5. the final response summarizes what changed, which files were touched, what
-   validation ran, and any remaining risks.
+- the requested behavior or artifact is implemented;
+- relevant tests or docs are added or updated;
+- validation passes, or failures are documented with exact causes;
+- touched files are summarized;
+- remaining risks are called out plainly.
