@@ -31,6 +31,7 @@ State the user-visible outcome in one sentence.
 ## Validation
 
 ```bash
+uv sync --locked
 uv run pytest
 uv run ruff check .
 uv run ruff format --check .

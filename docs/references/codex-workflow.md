@@ -16,6 +16,8 @@ rediscover them.
   https://developers.openai.com/codex/skills
 - Codex non-interactive mode:
   https://developers.openai.com/codex/noninteractive
+- uv in GitHub Actions:
+  https://docs.astral.sh/uv/guides/integration/github/
 
 ## Local Mapping
 
@@ -24,8 +26,9 @@ rediscover them.
 - Reusable repo workflow guidance lives in
   `.agents/skills/hello-world-maintenance/SKILL.md`.
 - Larger tasks can use `docs/exec-plans/templates/hello-world-plan.md`.
-- Standard validation is `uv run pytest`, `uv run ruff check .`, and
-  `uv run ruff format --check .`.
+- Standard validation is `uv sync --locked`, `uv run pytest`,
+  `uv run ruff check .`, and `uv run ruff format --check .`.
+- GitHub Actions runs the standard validation in `.github/workflows/ci.yml`.
 
 ## Prompt Shape
 

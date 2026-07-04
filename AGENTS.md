@@ -10,7 +10,6 @@ The project uses:
 
 - `uv` for Python environment and dependency management.
 - TOML for application and Codex configuration.
-- `stdlogkit` for future production logging.
 
 Do not introduce alternative environment managers, logging frameworks, or
 configuration formats unless explicitly requested.
@@ -51,6 +50,44 @@ requested.
 If dependencies are missing, update `pyproject.toml` first, then run
 `uv sync`.
 
+Before running application code, perform a quick preflight check that matches
+the command being run:
+
+1. confirm required tools such as `uv` are available;
+2. confirm dependencies are synced when the command needs them;
+3. confirm required config files such as `configs/default.toml` exist;
+4. confirm required external resources exist before using them;
+5. stop and report missing prerequisites before running expensive, stateful, or
+   destructive commands.
+
+For this template, the preflight is intentionally small. For larger projects,
+extend it to cover project-specific resources such as model paths, datasets,
+service credentials, ports, GPUs, databases, or local caches.
+
+## Codex Operating Rules
+
+These rules are reusable across projects based on this template:
+
+- inspect relevant files before editing;
+- confirm interfaces before using or changing them;
+- make the smallest change that satisfies the request;
+- update tests and docs when behavior, commands, configuration, or public APIs
+  change;
+- run the narrowest useful validation first;
+- report changed files, validation, and remaining risks.
+
+## Project-Specific Boundaries
+
+These constraints are specific to this hello-world template:
+
+- runtime behavior stays focused on printing the configured hello-world message;
+- CLI argument parsing belongs in `src/codex_repo_template/cli.py`;
+- TOML parsing and validation belong in `src/codex_repo_template/config.py`;
+- the package entry point belongs in `src/codex_repo_template/__main__.py`;
+- user-editable config examples belong in `configs/`;
+- do not add services, background jobs, databases, network calls, or model
+  dependencies unless explicitly requested.
+
 ## Logging
 
 This template has no production logs because the application only emits
@@ -58,7 +95,7 @@ intentional CLI output.
 
 When production logging is added:
 
-1. use `stdlogkit`;
+1. add and document the `stdlogkit` dependency;
 2. inspect existing usage or official project references before calling its API;
 3. never replace it with `logging`, `structlog`, `loguru`, or another framework
    without explicit approval.
@@ -92,12 +129,13 @@ Do not invent config keys without checking how configuration is parsed.
 For each non-trivial task:
 
 1. read the relevant files before editing;
-2. restate the goal, constraints, and done condition when the task is broad;
-3. make the smallest change that satisfies the request;
-4. update tests or docs when behavior, commands, configuration, or public APIs
+2. perform a preflight check before running application code;
+3. restate the goal, constraints, and done condition when the task is broad;
+4. make the smallest change that satisfies the request;
+5. update tests or docs when behavior, commands, configuration, or public APIs
    change;
-5. run the narrowest useful validation first;
-6. summarize changed files, validation, and remaining risks.
+6. run the narrowest useful validation first;
+7. summarize changed files, validation, and remaining risks.
 
 Use `docs/exec-plans/templates/hello-world-plan.md` for larger tasks that need
 an explicit plan.
@@ -123,12 +161,8 @@ Prefer small, focused changes.
 
 Reuse existing interfaces before creating new ones.
 
-Preserve existing architecture boundaries:
-
-- CLI argument parsing belongs in `src/codex_repo_template/cli.py`.
-- TOML parsing and validation belong in `src/codex_repo_template/config.py`.
-- The package entry point belongs in `src/codex_repo_template/__main__.py`.
-- User-editable config examples belong in `configs/`.
+Preserve existing architecture boundaries listed under Project-Specific
+Boundaries.
 
 Avoid broad rewrites unless explicitly requested.
 

@@ -30,10 +30,26 @@ validation commands.
 
 - CLI output is intentional user-facing output, so `print()` is acceptable.
 - Production logging is not needed for this hello-world application. If logging
-  is added later, use `stdlogkit` and update tests and docs.
+  is added later, add and document `stdlogkit`, inspect its interface, and
+  update tests and docs.
 - Configuration remains TOML-only.
 - The standard library is enough for runtime behavior; avoid runtime
   dependencies unless they solve a real requirement.
+- The default config path is optimized for a source checkout. If this becomes a
+  distributable package, move default config loading to package data or
+  `importlib.resources`.
+
+## Extending To Larger Projects
+
+When this template is adapted beyond a hello-world CLI, add project-specific
+architecture facts before asking Codex to make broad changes:
+
+- module ownership and public API boundaries;
+- data model and migration rules;
+- error handling and logging policy;
+- external service contracts and retry behavior;
+- performance, security, and privacy constraints;
+- required runtime resources for preflight checks.
 
 ## Change Rules
 

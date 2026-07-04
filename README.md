@@ -37,17 +37,28 @@ uv run ruff check .
 uv run ruff format --check .
 ```
 
+The same validation runs in GitHub Actions on pushes to `main` and on pull
+requests.
+
 ## Codex Workflow
 
 Use this default loop for any change:
 
 1. Read `AGENTS.md`, `README.md`, `ARCHITECTURE.md`, `pyproject.toml`, and the
    relevant files under `src/`, `tests/`, and `docs/`.
-2. Confirm the goal, constraints, and done condition.
-3. Make one focused change.
-4. Update tests and docs when behavior, commands, config, or public APIs change.
-5. Run the narrowest relevant validation.
-6. Report changed files, validation, and remaining risks.
+2. Run the preflight checks needed before executing application code: required
+   tools, synced dependencies, config files, and any task-specific external
+   resources.
+3. Confirm the goal, constraints, and done condition.
+4. Make one focused change.
+5. Update tests and docs when behavior, commands, config, or public APIs change.
+6. Run the narrowest relevant validation.
+7. Report changed files, validation, and remaining risks.
+
+For this hello-world template, preflight usually means confirming `uv` works and
+`configs/default.toml` exists before running the CLI. Larger projects should
+extend the same step to check resources such as model paths, datasets, service
+credentials, ports, GPUs, databases, or local caches.
 
 For larger changes, create an execution plan from
 `docs/exec-plans/templates/hello-world-plan.md` and place the active copy under
@@ -88,5 +99,6 @@ uv run codex-hello --config configs/default.toml
 
 This template follows the public Codex guidance for `AGENTS.md`, project
 configuration, skills, non-interactive runs, and validation-focused workflows.
-See `docs/references/codex-workflow.md` for the source links used while
-building the template.
+The CI workflow follows the official uv guidance for GitHub Actions. See
+`docs/references/codex-workflow.md` for the source links used while building
+the template.

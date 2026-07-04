@@ -22,8 +22,16 @@ Application configuration lives in TOML. Add new keys only after inspecting
 A change is not complete until the relevant validation command has run, or the
 reason it could not run is documented.
 
+## Preflight Before Execution
+
+Codex should verify the minimal prerequisites before running application code.
+For this template, that means `uv`, synced dependencies when needed, and
+`configs/default.toml`. Larger projects should add concrete checks for external
+resources such as model paths, datasets, credentials, ports, GPUs, databases,
+or caches.
+
 ## CLI Output Is Intentional
 
 The hello-world behavior is user-facing CLI output, so `print()` is acceptable
-in `cli.py`. Future production logs should use `stdlogkit` after its interface
-has been inspected.
+in `cli.py`. Future production logs should use `stdlogkit` only after the
+dependency has been added, documented, and inspected.
